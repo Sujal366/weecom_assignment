@@ -89,6 +89,42 @@ const ProductDashboard = () => {
               // onDelete={handleDeleteProduct}
               // isDeleting={isDeleting}
             />
+
+            {/* Pagination */}
+            {productsData && products.length > 0 && (
+              <div className="flex items-center justify-between mt-6">
+                <div className="text-sm text-muted-foreground">
+                  Showing {currentPage * limit + 1} to{" "}
+                  {Math.min((currentPage + 1) * limit, productsData.total)} of{" "}
+                  {productsData.total} products
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() =>
+                      setCurrentPage((prev) => Math.max(0, prev - 1))
+                    }
+                    disabled={currentPage === 0}
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                    Previous
+                  </Button>
+                  <span className="text-sm">
+                    Page {currentPage + 1} of {totalPages}
+                  </span>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setCurrentPage((prev) => prev + 1)}
+                    disabled={currentPage >= totalPages - 1}
+                  >
+                    Next
+                    <ChevronRight className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>
