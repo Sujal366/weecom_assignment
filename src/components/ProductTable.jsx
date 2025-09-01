@@ -7,8 +7,8 @@ const ProductTable = ({
   products,
   isLoading,
   // onEdit,
-  // onDelete,
-  // isDeleting,
+  onDelete,
+  isDeleting,
 }) => {
   if (isLoading) {
     return (
@@ -102,7 +102,7 @@ const ProductTable = ({
                   >
                     <Edit className="h-4 w-4" />
                   </Button> */}
-                  {/* <Button
+                  <Button
                     size="sm"
                     variant="destructive"
                     onClick={() => onDelete(product.id)}
@@ -110,7 +110,7 @@ const ProductTable = ({
                     className="h-8 w-8 p-0"
                   >
                     <Trash2 className="h-4 w-4" />
-                  </Button> */}
+                  </Button>
                 </div>
               </td>
             </tr>

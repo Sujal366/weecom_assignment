@@ -18,6 +18,7 @@ const ProductDashboard = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(0);
   const [selectedCategory, setSelectedCategory] = useState("");
+  const [isDeleting, setIsDeleting] = useState(false);
 
     const queryClient = useQueryClient();
     const limit = 10;
@@ -42,6 +43,45 @@ const ProductDashboard = () => {
       },
       keepPreviousData: true,
     });
+
+    const deleteProductMutation = useMutation({
+      mutationFn: productApi.deleteProduct,
+      onSuccess: (deletedProduct) => {
+        // Update all product queries in cache with the returned data
+        queryClient.setQueriesData(["products"], (oldData) => {
+          if (!oldData || !Array.isArray(oldData.products)) return oldData;
+          const updatedProducts = oldData.products.filter(
+            (product) => product.id !== deletedProduct.id
+          );
+          const newTotal = Math.max(0, oldData.total - 1);
+
+          // If current page becomes empty and there are more pages, go to previous page
+          if (updatedProducts.length === 0 && currentPage > 0) {
+            setCurrentPage(currentPage - 1);
+          }
+
+          return {
+            ...oldData,
+            products: updatedProducts,
+            total: newTotal,
+          };
+        });
+        setIsDeleting(false);
+        showToast("Product deleted successfully!");
+      },
+      onError: (error) => {
+        console.error("Error deleting product:", error);
+        setIsDeleting(false);
+        showToast("Failed to delete product.", "error");
+      },
+    });
+
+    const handleDeleteProduct = async (productId) => {
+      if (window.confirm("Are you sure you want to delete this product?")) {
+        setIsDeleting(true);
+        deleteProductMutation.mutate(productId);
+      }
+    };
 
     const totalPages = productsData ? Math.ceil(productsData.total / limit) : 0;
     const products = productsData?.products || [];
@@ -86,8 +126,8 @@ const ProductDashboard = () => {
               products={products}
               isLoading={isLoading}
               // onEdit={handleEditProduct}
-              // onDelete={handleDeleteProduct}
-              // isDeleting={isDeleting}
+              onDelete={handleDeleteProduct}
+              isDeleting={isDeleting}
             />
 
             {/* Pagination */}
