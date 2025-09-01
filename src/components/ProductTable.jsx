@@ -6,7 +6,7 @@ import { Edit, Trash2, Package } from "lucide-react";
 const ProductTable = ({
   products,
   isLoading,
-  // onEdit,
+  onEdit,
   onDelete,
   isDeleting,
 }) => {
@@ -94,14 +94,14 @@ const ProductTable = ({
               </td>
               <td className="p-4">
                 <div className="flex items-center space-x-2">
-                  {/* <Button
+                  <Button
                     size="sm"
                     variant="outline"
                     onClick={() => onEdit(product)}
                     className="h-8 w-8 p-0"
                   >
                     <Edit className="h-4 w-4" />
-                  </Button> */}
+                  </Button>
                   <Button
                     size="sm"
                     variant="destructive"

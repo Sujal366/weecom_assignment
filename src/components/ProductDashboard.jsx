@@ -12,13 +12,15 @@ import {
 } from "lucide-react";
 import { productApi } from "../services/api";
 import ProductTable from "./ProductTable";
-// import ProductForm from "./ProductForm";
+import ProductForm from "./ProductForm";
 
 const ProductDashboard = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(0);
   const [selectedCategory, setSelectedCategory] = useState("");
   const [isDeleting, setIsDeleting] = useState(false);
+  const [editingProduct, setEditingProduct] = useState(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
     const queryClient = useQueryClient();
     const limit = 10;
@@ -42,6 +44,51 @@ const ProductDashboard = () => {
         return productApi.getProducts(params);
       },
       keepPreviousData: true,
+    });
+
+    const addProductMutation = useMutation({
+      mutationFn: productApi.addProduct,
+      onSuccess: (newProduct) => {
+        // Update all product queries in cache with the returned data
+        queryClient.setQueriesData(["products"], (oldData) => {
+          if (!oldData || !Array.isArray(oldData.products)) return oldData;
+          return {
+            ...oldData,
+            products: [newProduct, ...oldData.products.slice(0, -1)], // Add new product, remove last one to maintain limit
+            total: oldData.total + 1,
+          };
+        });
+        setIsDialogOpen(false);
+        setEditingProduct(null);
+        showToast("Product added successfully!");
+      },
+      onError: (error) => {
+        console.error("Error adding product:", error);
+        showToast("Failed to add product.", "error");
+      },
+    });
+
+    const updateProductMutation = useMutation({
+      mutationFn: ({ id, data }) => productApi.updateProduct(id, data),
+      onSuccess: (updatedProduct) => {
+        // Update all product queries in cache with the returned data
+        queryClient.setQueriesData(["products"], (oldData) => {
+          if (!oldData || !Array.isArray(oldData.products)) return oldData;
+          return {
+            ...oldData,
+            products: oldData.products.map((product) =>
+              product.id === updatedProduct.id ? updatedProduct : product
+            ),
+          };
+        });
+        setIsDialogOpen(false);
+        setEditingProduct(null);
+        showToast("Product updated successfully!");
+      },
+      onError: (error) => {
+        console.error("Error updating product:", error);
+        showToast("Failed to update product.", "error");
+      },
     });
 
     const deleteProductMutation = useMutation({
@@ -76,11 +123,42 @@ const ProductDashboard = () => {
       },
     });
 
+    const handleEditProduct = (product) => {
+      setEditingProduct(product);
+      setIsDialogOpen(true);
+    };
+
     const handleDeleteProduct = async (productId) => {
       if (window.confirm("Are you sure you want to delete this product?")) {
         setIsDeleting(true);
         deleteProductMutation.mutate(productId);
       }
+    };
+
+    const handleAddProduct = () => {
+      setEditingProduct(null);
+      setIsDialogOpen(true);
+    };
+
+    const handleSubmitForm = async (formData) => {
+      try {
+        if (editingProduct) {
+          await updateProductMutation.mutateAsync({
+            id: editingProduct.id,
+            data: formData,
+          });
+        } else {
+          await addProductMutation.mutateAsync(formData);
+        }
+      } catch (error) {
+        console.error("Form submission failed:", error);
+        showToast("Failed to save product.", "error");
+      }
+    };
+
+    const handleCloseDialog = () => {
+      setIsDialogOpen(false);
+      setEditingProduct(null);
     };
 
     const totalPages = productsData ? Math.ceil(productsData.total / limit) : 0;
@@ -111,6 +189,10 @@ const ProductDashboard = () => {
                 Manage your products with ease
               </p>
             </div>
+            <Button onClick={handleAddProduct} className="w-full sm:w-auto">
+              <Plus className="h-4 w-4 mr-2" />
+              Add Product
+            </Button>
           </div>
         </div>
       </div>
@@ -125,7 +207,7 @@ const ProductDashboard = () => {
             <ProductTable
               products={products}
               isLoading={isLoading}
-              // onEdit={handleEditProduct}
+              onEdit={handleEditProduct}
               onDelete={handleDeleteProduct}
               isDeleting={isDeleting}
             />
@@ -170,7 +252,16 @@ const ProductDashboard = () => {
       </div>
 
       {/* Product Form Dialog */}
-      
+      {isDialogOpen && (
+        <ProductForm
+          product={editingProduct}
+          onSubmit={handleSubmitForm}
+          onCancel={handleCloseDialog}
+          isLoading={
+            addProductMutation.isPending || updateProductMutation.isPending
+          }
+        />
+      )}
     </div>
   );
 }
