@@ -13,6 +13,7 @@ import {
 import { productApi } from "../services/api";
 import ProductTable from "./ProductTable";
 import ProductForm from "./ProductForm";
+import { Input } from "./ui/input";
 
 const ProductDashboard = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -44,6 +45,15 @@ const ProductDashboard = () => {
         return productApi.getProducts(params);
       },
       keepPreviousData: true,
+    });
+
+    const {
+      data: categories = [],
+      isLoading: isCategoriesLoading,
+      error: categoriesError,
+    } = useQuery({
+      queryKey: ["categories"],
+      queryFn: productApi.getCategories,
     });
 
     const addProductMutation = useMutation({
@@ -140,6 +150,16 @@ const ProductDashboard = () => {
       setIsDialogOpen(true);
     };
 
+    const handleSearch = (e) => {
+      setSearchTerm(e.target.value);
+      setCurrentPage(0); // Reset to first page when searching
+    };
+
+    const handleCategoryChange = (e) => {
+      setSelectedCategory(e.target.value);
+      setCurrentPage(0); // Reset to first page when filtering
+    };
+
     const handleSubmitForm = async (formData) => {
       try {
         if (editingProduct) {
@@ -202,6 +222,33 @@ const ProductDashboard = () => {
         <Card>
           <CardHeader>
             <CardTitle>Products</CardTitle>
+            <div className="flex flex-col sm:flex-row gap-4">
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  placeholder="Search products..."
+                  value={searchTerm}
+                  onChange={handleSearch}
+                  className="pl-10"
+                />
+              </div>
+              <div>
+                <select
+                  value={selectedCategory}
+                  onChange={handleCategoryChange}
+                  className="border rounded px-3 py-2 min-w-[150px]"
+                  disabled={isCategoriesLoading}
+                >
+                  <option value="">All Categories</option>
+                  {categories.map((cat) => (
+                    <option key={cat} value={cat}>
+                      {cat.charAt(0).toUpperCase() +
+                        cat.slice(1).replace(/-/g, " ")}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
           </CardHeader>
           <CardContent>
             <ProductTable
