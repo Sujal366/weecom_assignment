@@ -200,16 +200,23 @@ const ProductDashboard = () => {
   return (
     <div className="min-h-screen bg-background relative">
       {/* Header */}
-      <div className="border-b bg-card">
+      <div
+        className="border-b bg-card"
+        style={{ borderColor: "rgb(226, 232, 240)" }}
+      >
         <div className="container mx-auto px-4 py-6">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
               <h1 className="text-3xl font-bold">Product Dashboard</h1>
-              <p className="text-muted-foreground">
+              <p style={{ color: "hsl(215.4 16.3% 46.9%)" }}>
                 Manage your products with ease
               </p>
             </div>
-            <Button onClick={handleAddProduct} className="w-full sm:w-auto">
+            <Button
+              onClick={handleAddProduct}
+              className="w-full sm:w-auto"
+              style={{ borderColor: "hsl(214.3 31.8% 91.4%)" }}
+            >
               <Plus className="h-4 w-4 mr-2" />
               Add Product
             </Button>
@@ -237,6 +244,7 @@ const ProductDashboard = () => {
                   value={selectedCategory}
                   onChange={handleCategoryChange}
                   className="border rounded px-3 py-2 min-w-[150px]"
+                  style={{ borderColor: "rgb(226, 232, 240)" }}
                   disabled={isCategoriesLoading}
                 >
                   <option value="">All Categories</option>

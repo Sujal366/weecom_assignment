@@ -4,10 +4,8 @@ import { cn } from "../../lib/utils";
 const Card = React.forwardRef(({ className, ...props }, ref) => (
   <div
     ref={ref}
-    className={cn(
-      "rounded-lg border bg-card text-card-foreground shadow-sm",
-      className
-    )}
+    className={cn("rounded-lg border shadow-sm", className)}
+    style={{ borderColor: "rgb(226, 232, 240)" }}
     {...props}
   />
 ));
@@ -17,6 +15,7 @@ const CardHeader = React.forwardRef(({ className, ...props }, ref) => (
   <div
     ref={ref}
     className={cn("flex flex-col space-y-1.5 p-6", className)}
+    style={{ borderColor: "rgb(226, 232, 240)" }}
     {...props}
   />
 ));
@@ -29,6 +28,7 @@ const CardTitle = React.forwardRef(({ className, ...props }, ref) => (
       "text-2xl font-semibold leading-none tracking-tight",
       className
     )}
+    style={{ borderColor: "rgb(226, 232, 240)" }}
     {...props}
   />
 ));
@@ -38,13 +38,16 @@ const CardDescription = React.forwardRef(({ className, ...props }, ref) => (
   <p
     ref={ref}
     className={cn("text-sm text-muted-foreground", className)}
+    style={{ borderColor: "rgb(226, 232, 240)" }}
     {...props}
   />
 ));
 CardDescription.displayName = "CardDescription";
 
 const CardContent = React.forwardRef(({ className, ...props }, ref) => (
-  <div ref={ref} className={cn("p-6 pt-0", className)} {...props} />
+  <div ref={ref} className={cn("p-6 pt-0", className)}
+   style={{ borderColor: "rgb(226, 232, 240)" }}
+  {...props} />
 ));
 CardContent.displayName = "CardContent";
 
@@ -52,6 +55,7 @@ const CardFooter = React.forwardRef(({ className, ...props }, ref) => (
   <div
     ref={ref}
     className={cn("flex items-center p-6 pt-0", className)}
+    style={{ borderColor: "rgb(226, 232, 240)" }}
     {...props}
   />
 ));

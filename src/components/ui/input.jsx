@@ -11,6 +11,7 @@ const Input = React.forwardRef(({ className, type, ...props }, ref) => {
       )}
       ref={ref}
       {...props}
+      style={{ borderColor: "rgb(226, 232, 240)" }}
     />
   );
 });

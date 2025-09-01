@@ -17,6 +17,7 @@ const ProductTable = ({
           <div
             key={i}
             className="flex items-center space-x-4 p-4 border rounded-lg"
+            style={{ borderColor: "rgb(226, 232, 240)" }}
           >
             <Skeleton className="h-4 w-1/4" />
             <Skeleton className="h-4 w-16" />
@@ -44,10 +45,19 @@ const ProductTable = ({
   }
 
   return (
-    <div className="overflow-x-auto">
-      <table className="w-full border-collapse">
+    <div
+      className="overflow-x-auto"
+      style={{ borderColor: "rgb(226, 232, 240)" }}
+    >
+      <table className="w-full" style={{ borderColor: "rgb(226, 232, 240)" }}>
         <thead>
-          <tr className="border-b bg-muted/50">
+          <tr
+            className="border-b bg-muted/50"
+            style={{
+              borderColor: "rgb(226, 232, 240)",
+              backgroundColor: "hsl(210 40% 96% / 0.5)",
+            }}
+          >
             <th className="text-left p-4 font-medium">Title</th>
             <th className="text-left p-4 font-medium">Price</th>
             <th className="text-left p-4 font-medium">Category</th>
@@ -60,6 +70,7 @@ const ProductTable = ({
             <tr
               key={product.id}
               className="border-b hover:bg-muted/30 transition-colors"
+              style={{ borderColor: "rgb(226, 232, 240)" }}
             >
               <td className="p-4">
                 <div>
@@ -75,7 +86,10 @@ const ProductTable = ({
                 <span className="font-medium">${product.price}</span>
               </td>
               <td className="p-4">
-                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary/10 text-primary">
+                <span
+                  className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary/10 text-primary"
+                  style={{ backgroundColor: "hsl(222.2 47.4% 11.2% / 0.1)" }}
+                >
                   {product.category}
                 </span>
               </td>
@@ -107,7 +121,7 @@ const ProductTable = ({
                     variant="destructive"
                     onClick={() => onDelete(product.id)}
                     disabled={isDeleting}
-                    className="h-8 w-8 p-0"
+                    className="h-8 w-8 p-0 text-white"
                   >
                     <Trash2 className="h-4 w-4" />
                   </Button>

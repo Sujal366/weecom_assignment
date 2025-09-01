@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
@@ -102,7 +103,7 @@ const ProductForm = ({ product, onSubmit, onCancel, isLoading }) => {
   };
 
   return (
-    <Card className="w-full max-w-md mx-auto absolute top-1/3 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+    <Card className="w-full max-w-md mx-auto absolute top-1/3 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white">
       <CardHeader>
         <CardTitle>{product ? "Edit Product" : "Add New Product"}</CardTitle>
       </CardHeader>
@@ -211,6 +212,7 @@ const ProductForm = ({ product, onSubmit, onCancel, isLoading }) => {
               value={formData.description}
               onChange={handleChange}
               className="flex h-20 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              style={{ borderColor: "rgb(226, 232, 240)" }}
               placeholder="Product description"
               rows="3"
             />
