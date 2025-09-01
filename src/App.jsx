@@ -1,14 +1,23 @@
-import { useState } from 'react'
-import './App.css'
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import "./App.css";
+import ProductDashboard from "./components/ProductDashboard";
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 1,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
-    <>
-      <p>Hello World!</p>
-    </>
-  )
+    <QueryClientProvider client={queryClient}>
+      <ProductDashboard />
+    </QueryClientProvider>
+  );
 }
 
-export default App
+export default App;
